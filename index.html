@@ -138,42 +138,6 @@
     <!-- iphone gesturestart fix - from github pages themes -->
     <!-- <script src="javascripts/scale.fix.js"></script> -->
     <script src="javascripts/offcanvas.js"></script>
-<!--     <script type="text/javascript">
-      !function(a,b){a("Keen","https://d26b395fwzu5fz.cloudfront.net/3.2.3/keen.min.js",b)}(function(a,b,c){var d,e,f;c["_"+a]={},c[a]=function(b){c["_"+a].clients=c["_"+a].clients||{},c["_"+a].clients[b.projectId]=this,this._config=b},c[a].ready=function(b){c["_"+a].ready=c["_"+a].ready||[],c["_"+a].ready.push(b)},d=["addEvent","setGlobalProperties","trackExternalLink","on"];for(var g=0;g<d.length;g++){var h=d[g],i=function(a){return function(){return this["_"+a]=this["_"+a]||[],this["_"+a].push(arguments),this}};c[a].prototype[h]=i(h)}e=document.createElement("script"),e.async=!0,e.src=b,f=document.getElementsByTagName("script")[0],f.parentNode.insertBefore(e,f)},this);
-    </script> -->
-    <script src="https://d26b395fwzu5fz.cloudfront.net/3.2.3/keen.min.js" type="text/javascript"></script>
-
-    <script type="text/javascript">
-      var client = new Keen({
-        projectId: "54edf216672e6c11f5d598e7",   // String (required always)
-        writeKey: "ee0d84d0497553f790c0383ae417e523910aec0227933cf7926b2922e741bdef353b20273d4238aba390b98ddcc4d2900748adb071681c6fda4fb91b0f18f1f17e92e71b6eceb0bdc8cd4ea2a773d4f17cb66e0a485b9080eedbb57666d507e4807547d38efa5138d742f2929875afd5",     // String (required for sending data)
-        readKey: "53b4b72317aa91b48a8642a9af8889cffd3e6f8157566e26cdf06d3ce8ad324e09cda550cd1bb3df94a913074a0c947c82ca19902ae3a879eef55bb58dcbc71868fd095b5efb85a47c12334f1cd8ec93625fb28a822768797a2b45dd5875ce20c254c84bf484a165b7f7d7bf9921df19",       // String (required for querying data)
-        protocol: "auto",              // String (optional: https | http | auto)
-        host: "api.keen.io/3.0",        // String (optional)
-        requestType: "jsonp"            // String (optional: jsonp, xhr, beacon)
-      });
-      // Create a data object with the properties you want to send
-var purchaseEvent = {
-  item: "gadget",  
-  price: 25.50,
-  referrer: document.referrer,
-  keen: {
-    timestamp: new Date().toISOString()
-  }
-};
-
-// Send it to the "purchases" collection
-client.addEvent("purchases", purchaseEvent, function(err, res){
-  if (err) {
-    // there was an error!
-    console.log(err);
-  }
-  else {
-    // see sample response below
-    console.log(res);
-  }
-});
-    </script>
 
 
   </body>
