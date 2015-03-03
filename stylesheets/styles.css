@@ -1,0 +1,18 @@
+.wrapper{
+	background-color: #e0edf6;
+}
+.col-inner{
+	padding: 0 15px;
+}
+.col-inner svg{
+	background-color: #1072ca
+}
+
+text{
+	fill:#fff;
+}
+path{
+	stroke:#fff;
+	fill:none;
+	stroke-width:2;
+}
