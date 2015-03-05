@@ -1,18 +1,17 @@
 .wrapper{
-	background-color: #e0edf6;
+	background-color: #f8f8f8;
 }
 .col-inner{
 	padding: 0 15px;
 }
 .col-inner svg{
-	background-color: #1072ca
 }
 
 text{
-	fill:#fff;
+	fill:black;
 }
 path{
 	stroke:#fff;
-	fill:none;
-	stroke-width:2;
+	fill:firebrick;
+	stroke-width:1;
 }

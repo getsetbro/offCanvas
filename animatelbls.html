@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+html,body{height: 100%}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+/*
+path.slice{
+  stroke-width:1px;
+  stroke: white;
+}
+*/
+text{
+  opacity: 0;
+  font-size: 12px;
+}
+polyline{
+  opacity: 0;
+  stroke: black;
+  stroke-width: 1px;
+  fill: none;
+}
+
+</style>
+<body>
+<svg width="100%" height="100%" viewBox="-200 -105 400 210" preserveAspectRatio="xMidYMid meet"></svg>
+
+<script src="javascripts/d3.v3.min.js"></script>
+
+<script>
+  var color = d3.scale.ordinal().range(
+    //["#fee8c8","#fdd49e","#fdbb84","#fc8d59","#ef6548","#d7301f","#b30000"]
+    //["#b30000","#d7301f","#ef6548","#fc8d59","#fdbb84"]
+    ["hsl(0, 80%, 30%)","hsl(0, 80%, 40%)","hsl(0, 80%, 50%)","hsl(0, 80%, 60%)","hsl(0, 80%, 70%)"]
+  );
+  var data = [
+    {"label":"Oil","value":0.1},
+    {"label":"Engine","value":0.15},
+    {"label":"Pumps","value":0.2},
+    {"label":"Tires","value":0.25},
+    {"label":"Brakes","value":0.99}
+  ];
+  var pie = d3.layout.pie().sort(null).value(function(d) {return d.value;});
+  var arc = d3.svg.arc().outerRadius(75).innerRadius(55);
+  var outerArc = d3.svg.arc().outerRadius(100).innerRadius(75);
+  var duration = 750;
+  var ease = "quad-in";
+  var radius = 90; //distance from middle
+
+  /* ------- SVG -------*/
+
+  var svg = d3.select("svg");
+
+  svg.append("g").attr("class", "slices");
+  svg.append("g").attr("class", "labels");
+  svg.append("g").attr("class", "lines");
+
+  function tweenPie(b) {
+    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+    return function(t) { return arc(i(t)); };
+  }
+
+  /* ------- SLICE ARCS -------*/
+
+  var slice = svg.select(".slices").selectAll("path.slice").data(pie(data), function(d){ return d.data.label; });
+
+  slice.enter().insert("path")
+    .attr("class", "slice")
+    .style("fill", function(d) {
+      return color(d.data.label);
+    })
+    .transition().duration(duration).ease(ease)
+    .attrTween("d", tweenPie);
+
+  /* ------- TEXT LABELS -------*/
+
+  function midAngle(d){
+    return d.startAngle + (d.endAngle - d.startAngle)/2;
+  }
+
+  var text = svg.select(".labels").selectAll("text")
+    .data(pie(data), function(d){ return d.data.label; })
+    .enter().append("text")
+    .attr("dy", ".3em")
+    //.style("opacity", 0)
+    .text(function(d) {return d.data.label;})
+    .transition().duration(duration).ease(ease)
+    .style("opacity", 1)
+    .attrTween("transform", function(d) {
+      var i = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+      return function(t) {
+        var d2 = i(t);
+        var pos = outerArc.centroid(d2);
+        pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+        return "translate("+ pos +")";
+      };
+    })
+    .styleTween("text-anchor", function(d){
+      var i = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+      return function(t) {
+        return midAngle( i(t) ) < Math.PI ? "start" : "end";
+      };
+    })
+    ;
+
+  /* ------- SLICE TO TEXT POLYLINES -------*/
+
+  var polyline = svg.select(".lines").selectAll("polyline")
+    .data(pie(data), function(d){ return d.data.label; })
+    .enter()
+    .append("polyline")
+    //.style("opacity", 0)
+    .transition().duration(duration).ease(ease)
+    .style("opacity", 0.5)
+    .attrTween("points", function(d){
+      //this._current = this._current;
+      var i = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+      return function(t) {
+        var d2 = i(t);
+        var pos = outerArc.centroid(d2);
+        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+        return [arc.centroid(d2), outerArc.centroid(d2), pos];
+      };      
+    });
+
+</script>
+</body>

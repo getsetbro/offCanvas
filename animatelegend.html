@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+html,body{height: 100%}
+
+body {
+  font: 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/*
+path.slice{
+  stroke-width:1px;
+  stroke: white;
+}
+*/
+.labels g{
+  opacity: 0;
+}
+text{
+  font-size: 1em;
+}
+polyline{
+  opacity: 0;
+  stroke: black;
+  stroke-width: 1px;
+  fill: none;
+}
+
+</style>
+<body>
+<svg width="100%" height="100%" viewBox="-200 -105 400 210" preserveAspectRatio="xMidYMid meet"></svg>
+
+<script src="javascripts/d3.v3.min.js"></script>
+
+<script>
+;( function( d3 ) {
+"use strict";
+  var color = d3.scale.ordinal().range(
+    //["#fee8c8","#fdd49e","#fdbb84","#fc8d59","#ef6548","#d7301f","#b30000"]
+    //["#b30000","#d7301f","#ef6548","#fc8d59","#fdbb84"]
+    ["hsl(0, 65%, 35%)","hsl(0, 65%, 45%)","hsl(0, 65%, 55%)","hsl(0, 65%, 65%)","hsl(0, 65%, 70%)"]
+  );
+  var data = [
+    {"label":"Oil","value":0.1},
+    {"label":"Engine","value":0.15},
+    {"label":"Pumps","value":0.2},
+    {"label":"Tires","value":0.25},
+    {"label":"Brakes","value":0.99}
+  ];
+  var pie = d3.layout.pie().sort(null).value(function(d) {return d.value;});
+  var arc = d3.svg.arc().outerRadius(75).innerRadius(55);
+  var duration = 750;
+  var ease = "quad-in";
+
+  /* ------- SVG -------*/
+
+  var svg = d3.select("svg");
+
+  svg.append("g").attr("class", "slices").attr("transform","translate( 77, 0)");
+  svg.append("g").attr("class", "labels").attr("transform","translate(-77,-40)");
+
+  function tweenPie(b) {
+    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+    return function(t) { return arc(i(t)); };
+  }
+
+  /* ------- SLICE ARCS -------*/
+
+  var slice = svg.select(".slices").selectAll("path.slice")
+    .data(pie(data), function(d){ return d.data.label; })
+    .enter().insert("path")
+    .attr("class", "slice")
+    .style("fill", function(d) {
+      return color(d.data.label);
+    })
+    .transition().delay(duration).duration(duration).ease(ease)
+    .attrTween("d", tweenPie);
+
+  /* ------- TEXT LABELS -------*/
+
+  var legend = svg.select(".labels").selectAll("g")
+    .data(pie(data), function(d){ return d.data.label; })
+    .enter().append("g");
+
+  var circle = legend.append("circle")
+    .attr({cx:0, cy:"-4", r:"3"})
+    .style("fill", function(d) {
+      return color(d.data.label);
+    })
+  ;
+
+  var text = legend.append("text")
+    .attr("x",10)
+    .text(function(d) {return d.data.label;})
+  ;
+  
+  legend.transition().delay(duration).duration(duration).ease(ease)
+    .attrTween("transform", function(d,i) {
+      return function(t) {
+        var y = i * (t * 20);
+        return "translate(0, " + y + ")";
+      };
+    })
+    .style("opacity", 1)
+    ;
+
+} )( d3 );
+
+</script>
+</body>
